@@ -4,7 +4,7 @@ Description: Contains audio modules
 import json
 import vlc
 from beartype import beartype
-from shared.synapse import Synapse
+from rupert.shared.synapse import Synapse
 
 class RupertAudioSynapse(Synapse):
 	"""
