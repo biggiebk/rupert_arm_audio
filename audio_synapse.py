@@ -17,7 +17,7 @@ class RupertAudioSynapse(Synapse):
 	@beartype
 	def __init__(self, settings_file: str) -> None:
 		super().__init__(settings_file=settings_file)
-		self.pal_player = RupertAudioPlayer("")
+		self.rap = RupertAudioPlayer("")
 
 	@beartype
 	def process_event(self, consumer_message: tuple) -> None:
@@ -31,7 +31,7 @@ class RupertAudioSynapse(Synapse):
 		"""
 		control_dict = json.loads(consumer_message.value.decode("utf-8"))
 		if control_dict['event_type'] == 'control':
-			self.pal_player.set(control_dict)
+			self.rap.set(control_dict)
 		elif control_dict['event_type'] == 'status':
 			pass
 
