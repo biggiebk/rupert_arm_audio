@@ -1,0 +1,17 @@
+{
+	"listeners": {
+			"*:80": {
+					"pass": "applications/audio"
+			}
+	},
+
+	"applications": {
+			"audio": {
+					"type": "python 3.11",
+					"path": "/web/www/",
+					"home": "/web/venv/",
+					"module": "audio",
+					"callable": "app"
+			}
+	}
+}
