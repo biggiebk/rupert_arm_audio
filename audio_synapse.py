@@ -3,6 +3,7 @@ Description: Contains audio modules
 """
 import json
 import vlc
+import time
 from beartype import beartype
 from rupert.shared.synapse import Synapse
 
@@ -20,7 +21,7 @@ class RupertAudioSynapse(Synapse):
 		self.rap = RupertAudioPlayer("")
 
 	@beartype
-	def process_event(self, consumer_message: tuple) -> None:
+	def process_event(self, consumer_message) -> None:
 		"""
 			Description: Initiats events for the requested light
 			Responsible for:
@@ -29,7 +30,7 @@ class RupertAudioSynapse(Synapse):
 			Requires:
 				consumer_message
 		"""
-		control_dict = json.loads(consumer_message.value.decode("utf-8"))
+		control_dict = json.loads(consumer_message.value().decode("utf-8"))
 		if control_dict['event_type'] == 'control':
 			self.rap.set(control_dict)
 		elif control_dict['event_type'] == 'status':
@@ -70,17 +71,19 @@ class RupertAudioPlayer():
 			control_dict = Dictionary detailing what controls to execute
 		"""
 		self.control_dict = control_dict
+
 		if 'play_track' in self.control_dict:
 			self.__set_media()
 
-		if 'volume' in self.control_dict:
-			self.__set_volume()
-
 		if 'play' in self.control_dict:
 			self.__play_stop_pause()
+			time.sleep(1) # Seems to be required in the event we are also updating loop and/or volume after we start.
 
 		if 'loop' in self.control_dict:
 			self.__set_loop()
+
+		if 'volume' in self.control_dict:
+			self.__set_volume()
 
 ## Private methods
 	@beartype
@@ -89,7 +92,10 @@ class RupertAudioPlayer():
 			Starts or stops the player
 		"""
 		if self.control_dict['play'] == 'stop':
-			self.media_list_player.get_media_player().stop()
+			try: 
+				self.media_list_player.get_media_player().stop()
+			except:
+				pass
 		elif self.control_dict['play'] == 'play':
 			self.media_list_player.play()
 		elif self.control_dict['play'] == 'pause':
@@ -137,3 +143,4 @@ class RupertAudioPlayer():
 			Adjusts the volume
 		"""
 		self.media_list_player.get_media_player().audio_set_volume(int(self.control_dict['volume']))
+
