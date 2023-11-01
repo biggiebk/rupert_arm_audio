@@ -1,4 +1,4 @@
-#!/usr/bin/python3.11
+#!/usr/bin/env python3.11
 
 from rupert_arm_audio.audio_synapse import RupertAudioSynapse, RupertAudioPlayer
 
