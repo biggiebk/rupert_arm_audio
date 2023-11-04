@@ -1,12 +1,12 @@
 {
 	"listeners": {
 			"*:80": {
-					"pass": "applications/audio"
+					"pass": "applications/rupert"
 			}
 	},
 
 	"applications": {
-			"audio": {
+			"rupert": {
 					"type": "python 3.11",
 					"path": "/web/www/",
 					"home": "/web/venv/",
