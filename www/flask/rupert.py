@@ -17,9 +17,9 @@ def play(room, file, volume):
   return f"Play Room: {escape(room)} File: {escape(file)}"
 
 
-@app.route("/audio/play/<room>/<file>/<volume>")
+@app.route("/audio/play_list/<room>/<file>/<volume>")
 def play_list(room, file, volume):
-  with open(f"lists/{escape(file)}", 'r', encoding='utf-8') as list_file:
+  with open(f"/web/lists/{escape(file)}.json", 'r', encoding='utf-8') as list_file:
     list_file_json = list_file.read()
   list = json.loads(list_file_json)
   stop =  { "event_type": "control", "play": "stop" }
