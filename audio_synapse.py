@@ -64,7 +64,7 @@ class RupertAudioPlayer():
 			self.player.release()
 			del self.player
 		except AttributeError:
-			pass # do nothing we know this may blow up if something has not already started to play
+				print("Stopping crash bypassed")
 
 	@beartype
 	def set(self, control_dict: dict[str, set[str, int]]) -> None:
@@ -193,14 +193,14 @@ class RupertAudioPlayer():
 			try: 
 				self.media_list_player.get_media_player().stop()
 			except:
-				pass
+				print("Pausing crash bypassed")
 		elif self.control_dict['play'] == 'play':
 			self.media_list_player.play()
 		elif self.control_dict['play'] == 'pause':
 			try:
 				self.media_list_player.pause()
 			except:
-				pass
+				print("Pausing crash bypassed")
 		else:
 			raise ValueError(f"Unknown play status: {self.control_dict['play']}")
 
