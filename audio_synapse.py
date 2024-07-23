@@ -197,7 +197,10 @@ class RupertAudioPlayer():
 		elif self.control_dict['play'] == 'play':
 			self.media_list_player.play()
 		elif self.control_dict['play'] == 'pause':
-			self.media_list_player.pause()
+			try:
+				self.media_list_player.pause()
+			except:
+				pass
 		else:
 			raise ValueError(f"Unknown play status: {self.control_dict['play']}")
 
