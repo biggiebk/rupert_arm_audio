@@ -5,6 +5,7 @@ import json
 import vlc
 import time
 import ctypes
+import random
 from beartype import beartype
 from rupert.shared.synapse import Synapse
 
@@ -33,6 +34,8 @@ class RupertAudioSynapse(Synapse):
 		"""
 		control_dict = json.loads(consumer_message.value().decode("utf-8"))
 		if control_dict['event_type'] == 'control':
+			#pass
+			print(control_dict)
 			self.rap.set(control_dict)
 		elif control_dict['event_type'] == 'status':
 			pass
@@ -64,7 +67,7 @@ class RupertAudioPlayer():
 			self.player.release()
 			del self.player
 		except AttributeError:
-				print("Stopping crash bypassed")
+			print("Stopping crash bypassed")
 
 	@beartype
 	def set(self, control_dict: dict[str, set[str, int]]) -> None:
@@ -193,14 +196,14 @@ class RupertAudioPlayer():
 			try: 
 				self.media_list_player.get_media_player().stop()
 			except:
-				print("Pausing crash bypassed")
+				print("Stopping crash bypassed")
 		elif self.control_dict['play'] == 'play':
 			self.media_list_player.play()
 		elif self.control_dict['play'] == 'pause':
 			try:
 				self.media_list_player.pause()
 			except:
-				print("Pausing crash bypassed")
+				print("Pausing crashed bypassed")
 		else:
 			raise ValueError(f"Unknown play status: {self.control_dict['play']}")
 
@@ -234,6 +237,8 @@ class RupertAudioPlayer():
 		# creating a new media
 		# if array
 		if isinstance(self.control_dict['play_tracks'], list):
+			if self.control_dict.setdefault('shuffle', False):
+				random.shuffle(self.control_dict['play_tracks'])
 			for media in self.control_dict['play_tracks']:
 				print(media)
 				self.media = self.player.media_new(media)
@@ -271,6 +276,17 @@ class RupertAudioPlayer():
 		media_events.event_attach(vlc.EventType.MediaFreed, self.__event_MediaFreed)
 		media_events.event_attach(vlc.EventType.MediaStateChanged, self.__event_MediaStateChanged)
 		media_events.event_attach(vlc.EventType.MediaSubItemTreeAdded, self.__event_MediaSubItemTreeAdded)
+
+	@beartype
+	def __set_shuffle(self) -> None:
+		"""
+			Manipulates shuffle
+		"""
+		# current
+		if self.control_dict['shuffle']:
+			self.media_list_player.set_playback_mode(vlc.Pla)
+		else:
+			raise ValueError(f"Unknown loop type requested: {self.control_dict['loop']}")
 
 	@beartype
 	def __set_volume(self) -> None:
